@@ -7,8 +7,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome import service as fs
 from selenium.webdriver.chrome.service import Service
-import chromedriver_binary
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+# ↓Windowsのとき(もしかしたらなくても動くかも)
+#import chromedriver_binary
+#from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # GUI
 import PySimpleGUI as sg
@@ -16,9 +17,6 @@ import PySimpleGUI as sg
 # general
 import time
 
-
-# hangeid
-HANGE_ID = 'your hange id'
 
 #
 # puretomo操作クラス
@@ -33,7 +31,7 @@ class Puretomo():
 
         # Mac
         self.driver = webdriver.Chrome()
-        # Windows
+        # Windows(Windowsも↑で動きそう)
         #self.driver = webdriver.Chrome('chromedriver.exe')
         
         print('Chrome init end')
@@ -135,7 +133,7 @@ class Puretomo():
         return mannequinNames
     
     # マネキン着替え保存
-    def change_mannequin(self, changeMannequinName):
+    def change_mannequin(self, changeMannequinName, inputId):
         print('マネキン着替え開始')
         # ページ数を取得
         page = self.driver.find_elements(By.CSS_SELECTOR, '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li')
@@ -171,7 +169,7 @@ class Puretomo():
                     time.sleep(0.5)
 
                     # 着替え保存をクリック
-                    saveButtonSelector = '#gtm_closet_save_' + str(HANGE_ID)
+                    saveButtonSelector = '#gtm_closet_save_' + str(inputId)
                     saveButton = self.driver.find_element(By.CSS_SELECTOR, saveButtonSelector)
                     saveButton.click()
                     saveFlag = True
@@ -191,24 +189,26 @@ class Puretomo():
 
 
 # マネキンを選択して着替えられるウィンドウを表示
-def mannequinChangeWindow(chrome, mannequinNames):
+def mannequinChangeWindow(chrome, mannequinNames, inputId):
     # ログインフラグ
     isLogin = True
 
     sg.theme('Purple')   # デザインテーマの設定
 
     # ウィンドウに配置するコンポーネント
-    layout = [[sg.Text('login_id: '), sg.InputText(password_char="*")],
-            [sg.Text('login_pass: '), sg.InputText(password_char="*")],
-            [sg.Button('ログイン'), sg.Button('マネキン取得'), sg.Button('終了')]
+    layout = [[sg.Text('login_id: ',size=(12,1)), sg.InputText(password_char="*")],
+            [sg.Text('login_pass: ',size=(12,1)), sg.InputText(password_char="*")],
+            [sg.Button('ログイン'), sg.Button('マネキン取得'), sg.Button('終了')],
+            [sg.Text('ーーーーーーーーーーーーーー')],
+            [sg.Text('マネキン一覧')]
             ]
   
     # マネキンボタンを追加
     addLayout = []
     print(mannequinNames)
     for buttonName in mannequinNames:
-        addLayout.append(sg.Button(buttonName))
-        if len(addLayout) == 6:
+        addLayout.append(sg.Button(buttonName, size=(10,1)))
+        if len(addLayout) == 5:
             layout.append(addLayout)
             addLayout = []
     if addLayout != []:
@@ -241,7 +241,7 @@ def mannequinChangeWindow(chrome, mannequinNames):
                 print('ログインしてください')
         elif event in mannequinNames:
             print('「' + str(event) + '」に着替えます')
-            chrome.change_mannequin(str(event))
+            chrome.change_mannequin(str(event), inputId)
             # 連続して着替えすぎると失敗するためスリープ
             time.sleep(1)
     changeWindow.close()
@@ -260,8 +260,8 @@ def main():
     mannequinNames = []
 
     # ウィンドウに配置するコンポーネント
-    layout = [[sg.Text('login_id: '), sg.InputText(password_char="*")],
-            [sg.Text('login_pass: '), sg.InputText(password_char="*")],
+    layout = [[sg.Text('login_id: ',size=(12,1)), sg.InputText(password_char="*")],
+            [sg.Text('login_pass: ',size=(12,1)), sg.InputText(password_char="*")],
             [sg.Button('ログイン'), sg.Button('マネキン取得'), sg.Button('終了')]
             ]
 
@@ -272,6 +272,7 @@ def main():
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == '終了':
+            chrome.quit()
             break
         elif event == 'ログイン':
             if isLogin:
@@ -286,8 +287,9 @@ def main():
                 if len(mannequinNames) != 0:
                     window.Hide()
                     # マネキン着替え用画面を表示
-                    mannequinChangeWindow(chrome, mannequinNames)
+                    mannequinChangeWindow(chrome, mannequinNames, str(values[0]))
                     window.UnHide()
+                    break
             else:
                 # TODO 画面に表示
                 print('ログインしてください')
