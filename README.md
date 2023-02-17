@@ -13,4 +13,8 @@ seleniumのブラウザ操作で無理やりpuretomoのマネキン着替えを�
 実行ファイルをダウンロード
 - [mac用](https://github.com/wagowa5/PuretomoAuto/raw/master/mac%E5%AE%9F%E8%A1%8C%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB/puretomoAuto)
 - Windows用(2/17 22時頃に追加予定)
-
+    - ソースも置いてあるのでpython触れる方はソースから実行もできます
+    - 必要なmodule
+        - selenium
+        - pysimplegui
+        - もしかしたらchrome関連(importでコメントアウトしているやつ)
