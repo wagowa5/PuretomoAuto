@@ -91,6 +91,7 @@ class Puretomo():
             self.driver.get('https://puretomo.hange.jp/closet/')
         except Exception as e:
             print('ログインエラー。id,パスワードを確認して再度お試しください')
+            print('---- selenium エラー ----')
             print(e)
 
             # ログイン再開できるようにログインページに戻る
@@ -275,9 +276,10 @@ def mannequinChangeWindow(chrome, mannequinNames, inputId):
                 chrome.change_mannequin(str(event), inputId)
                 # 連続して着替えすぎると失敗するためスリープ
                 time.sleep(1)
-            except:
+            except Exception as e:
                 print('マネキン着替え保存でエラー')
                 print('短時間に着替えすぎるとサイトが追いつかず失敗することがあります')
+                print('---- selenium エラー ----')
                 print(e)
             printRuledLine()
             
@@ -323,15 +325,18 @@ def main():
                 if isLogin:
                     try:
                         chrome.transition_puretomo_mannequin()
-                    except:
+                    except Exception as e:
                         print('puretomoページへの遷移に失敗')
+                        print('---- selenium エラー ----')
+                        print(e)
         elif event == 'マネキン取得':
             if isLogin:
                 try:
                     mannequinNames = chrome.get_mannequins()
-                except:
+                except Exception as e:
                     print('マネキン取得でエラー。')
                     print('chromeにダイアログが表示されている場合は拒否して再度お試しください')
+                    print('---- selenium エラー ----')
                     print(e)
 
                     # Puretomoマネキンページに戻ってリトライできるようにする
