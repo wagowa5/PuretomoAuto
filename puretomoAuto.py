@@ -134,12 +134,14 @@ class Puretomo():
         pageNum = len(page)
 
         mannequinNames = []
+        currentPage = 1
         for i in range(pageNum-2):
             # マネキン2ページ目から遷移が必要なため遷移する
             if i != 0 :
                 pageSelector = '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child(' + str(i+2) + ') > button'
                 pageButton = self.driver.find_element(By.CSS_SELECTOR, pageSelector)
                 pageButton.click()
+                currentPage += 1
                 time.sleep(0.5)
 
             # 1ページあたりのマネキン数を取得
@@ -158,8 +160,9 @@ class Puretomo():
         printRuledLine()
 
         # 着替え時に前から検索できるように先頭ページに遷移しておく
-        firstPageButton = self.driver.find_element(By.CSS_SELECTOR, '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child(2) > button')
-        firstPageButton.click()
+        if currentPage != 1:
+            firstPageButton = self.driver.find_element(By.CSS_SELECTOR, '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child(2) > button')
+            firstPageButton.click()
 
         print(mannequinNames)
         return mannequinNames
