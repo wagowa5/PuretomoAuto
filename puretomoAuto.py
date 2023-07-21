@@ -33,12 +33,23 @@ class Puretomo():
         #option = ChromeOptions()
         #option.add_argument('--incognito')  
 
-        # Mac
-        webdriver_service = Service('./chromedriver')
-        self.driver = webdriver.Chrome(service=webdriver_service)
-        self.driverWait = WebDriverWait(self.driver, 10)
-        # Windows(Windowsも↑で動きそう)
-        #self.driver = webdriver.Chrome('chromedriver.exe')
+        try:
+            # Mac
+            # webdriver_service = Service('./chromedriver')
+            # Windows
+            webdriver_service = Service('./chromedriver.exe')
+            self.driver = webdriver.Chrome(service=webdriver_service)
+            self.driverWait = WebDriverWait(self.driver, 10)
+        except Exception as e:
+            print('chromedriverの起動に失敗しました')
+            print('ご利用のGoogleChromeと同じバージョンのchromedriver.exeに更新してください')
+            print('・https://chromedriver.chromium.org/downloads')
+            print('・https://googlechromelabs.github.io/chrome-for-testing/#stable')
+            print('-------')
+            print(e)
+            self.driver.quit()
+        
+        # self.driverWait = WebDriverWait(self.driver, 10)
         
         print('Chrome init end')
         printRuledLine()
