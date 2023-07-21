@@ -16,7 +16,7 @@ zipをダウンロードして実行ファイル実行
 
 GoogleChromeのバージョンとchromedriver.exeのバージョンが一致していないと動きません
 
-chromedriver.exeをインストールされているGoogleChromeのバージョンに合ったものに置き換えてください(zipに入っているのは`115.0.5790.102`です)
+使用中のGoogleChromeと同じバージョンのchromedriver.exeに置き換えてください(zipに入っているchromedriver.exeは`115.0.5790.102`です)
 
 - 最新バージョン: https://googlechromelabs.github.io/chrome-for-testing/#stable
     - 2023-07-21時点の最新: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.102/win64/chromedriver-win64.zip
