@@ -34,7 +34,8 @@ class Puretomo():
         #option.add_argument('--incognito')  
 
         # Mac
-        self.driver = webdriver.Chrome()
+        webdriver_service = Service('./chromedriver')
+        self.driver = webdriver.Chrome(service=webdriver_service)
         self.driverWait = WebDriverWait(self.driver, 10)
         # Windows(Windowsも↑で動きそう)
         #self.driver = webdriver.Chrome('chromedriver.exe')
