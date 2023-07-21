@@ -10,7 +10,7 @@ puretomoのマネキン自動着替え
 seleniumのブラウザ操作で無理やりpuretomoのマネキン着替えを行う
 
 # Installation
-実行ファイルをダウンロードして実行
+zipをダウンロードして実行ファイル実行
 - [mac用](https://github.com/wagowa5/PuretomoAuto/raw/master/mac%E5%AE%9F%E8%A1%8C%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB/puretomo_auto.zip)
 - [Windows用](https://github.com/wagowa5/PuretomoAuto/raw/master/windows%E5%AE%9F%E8%A1%8C%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB/puretomoAuto.exe)
 ------
