@@ -15,6 +15,7 @@ zipをダウンロードして実行ファイル実行
 - [Windows用](https://github.com/wagowa5/PuretomoAuto/raw/master/windows%E5%AE%9F%E8%A1%8C%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB/puretomoAuto.exe)
 
 GoogleChromeのバージョンとchromedriver.exeのバージョンが一致していないと動きません
+
 chromedriver.exeをインストールされているGoogleChromeのバージョンに合ったものに置き換えてください(zipに入っているのは`115.0.5790.102`です)
 
 - 最新バージョン: https://googlechromelabs.github.io/chrome-for-testing/#stable
