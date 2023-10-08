@@ -31,10 +31,13 @@ GoogleChromeのバージョンとchromedriver.exeのバージョンが一致し�
     - もしかしたらchrome関連(importでコメントアウトしているやつ)
 
 
+
+------
+
 ## GoogleChromeの自動更新でchromedriverの最新バージョンより進んでしまって動かなくなってしまった方へ
 ↓で使えると思います
 
-1. [ダウンロード](https://github.com/wagowa5/PuretomoAuto/raw/master/windows%E5%AE%9F%E8%A1%8C%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB/puretomo_auto.zip)
+1. [ダウンロード](https://drive.google.com/file/d/15l33FuDAyfxz1YhjrPdrfONRtxti5WUl/view?usp=sharing)
 2. 1のzip展開
 3. 中にあるpuretomoAuto.exeのショートカットを作成する
 4. ショートカットを使いやすい場所に移動
