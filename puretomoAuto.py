@@ -16,7 +16,7 @@ from selenium.webdriver.chrome.service import Service
 #from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # GUI
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 
 # general
 import time
@@ -178,48 +178,67 @@ class Puretomo():
 
         print(mannequinNames)
         return mannequinNames
-    
+
     # マネキン着替え保存
     def change_mannequin(self, changeMannequinName, inputId):
         # ページ数を取得
-        page = self.driver.find_elements(By.CSS_SELECTOR, '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li')
+        page = self.driver.find_elements(By.CSS_SELECTOR,
+                                         '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li'
+                                         )
         pageNum = len(page)
 
         saveFlag = False
         currentPage = 1
-        for i in range(pageNum-2):
+        for i in range(pageNum - 2):
             # マネキン2ページ目から遷移が必要なため遷移する
-            if i != 0 :
-                pageSelector = '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child(' + str(i+2) + ') > button'
+            if i != 0:
+                pageSelector = ('#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child('
+                                + str(i + 2) + ') > button')
                 pageButton = self.driver.find_element(By.CSS_SELECTOR, pageSelector)
                 pageButton.click()
                 currentPage += 1
-                time.sleep(0.5)
+                time.sleep(0.5)  # ここはそのまま（ページ遷移用）
 
             # 1ページあたりのマネキン数を取得
-            # ↓でも15固定だったので定数にした
-            #mannequins = self.driver.find_elements(By.CSS_SELECTOR, '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.mannequinList_mannequinList__2WDuH > div > div')
             mannequinNum = 15
 
             for j in range(mannequinNum):
                 self.driver.implicitly_wait(5)
                 # マネキン名を取得
-                mannequinSelector = '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.mannequinList_mannequinList__2WDuH > div:nth-child(' + str(j+1) + ') > p'
+                mannequinSelector = '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.mannequinList_mannequinList__2WDuH > div:nth-child(' + str(
+                    j + 1) + ') > p'
                 mannequinName = self.driver.find_element(By.CSS_SELECTOR, mannequinSelector).text
                 if mannequinName == changeMannequinName:
                     # マネキン画像をクリック
-                    mannequinImageSelector = '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.mannequinList_mannequinList__2WDuH > div:nth-child(' + str(j+1) + ') > div > div'
+                    mannequinImageSelector = '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.mannequinList_mannequinList__2WDuH > div:nth-child(' + str(
+                        j + 1) + ') > div > div'
                     mannequinImage = self.driver.find_element(By.CSS_SELECTOR, mannequinImageSelector)
                     mannequinImage.click()
 
-                    time.sleep(0.5)
-
-                    # 着替え保存をクリック
+                    # --- 保存ボタンが active になるまで待つ ---
                     saveButtonSelector = '#gtm_closet_save_' + str(inputId)
-                    saveButton = self.driver.find_element(By.CSS_SELECTOR, saveButtonSelector)
+
+                    def wait_save_button_active(driver):
+                        btn = driver.find_element(By.CSS_SELECTOR, saveButtonSelector)
+                        classes = btn.get_attribute("class") or ""
+                        # 押下可能になると AvatarViewArea_active__2upp2 が付与される
+                        if "AvatarViewArea_active__2upp2" in classes:
+                            return btn
+                        return False
+
+                    saveButton = self.driverWait.until(wait_save_button_active)
                     saveButton.click()
                     saveFlag = True
-                    time.sleep(0.5)
+
+                    # 保存処理が走り終わってボタンが active でなくなるまで待つ
+                    def wait_save_button_inactive(driver):
+                        btn = driver.find_element(By.CSS_SELECTOR, saveButtonSelector)
+                        classes = btn.get_attribute("class") or ""
+                        # active が外れる（inactive や saveLoad など別状態になる）まで待機
+                        return "AvatarViewArea_active__2upp2" not in classes
+
+                    self.driverWait.until(wait_save_button_inactive)
+                    # --- 修正ここまで（time.sleep(0.5) を廃止） ---
 
                     # 着替え完了でbreak
                     break
@@ -230,7 +249,8 @@ class Puretomo():
         if currentPage != 1:
             # ページ移動したときは早すぎて落ちるので追加で待機
             time.sleep(0.5)
-            firstPageButton = self.driver.find_element(By.CSS_SELECTOR, '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child(2) > button')
+            firstPageButton = self.driver.find_element(By.CSS_SELECTOR,
+                                                       '#closetAreaWrap > div.areaWrap > div.closet_itemBagArea__hcoGs > div.closet_itemListMainAreaWrap__esqU- > div.pager > nav > ul > li:nth-child(2) > button')
             firstPageButton.click()
 
 

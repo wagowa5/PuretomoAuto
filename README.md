@@ -27,8 +27,13 @@ GoogleChromeのバージョンとchromedriver.exeのバージョンが一致し�
 ソースも置いてあるのでpython触れる方はソースから実行もできます
 - 必要なmodule
     - selenium
-    - pysimplegui
+    - freesimplegui
     - もしかしたらchrome関連(importでコメントアウトしているやつ)
+
+インストール例:
+```
+pip install selenium FreeSimpleGUI
+```
 
 
 
